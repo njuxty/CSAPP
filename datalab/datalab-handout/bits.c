@@ -140,7 +140,7 @@ NOTES:
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return ~((~(x & (~y))) & (~((~x) & y)));
+  return ~((~(x&(~y)))&(~((~x)&y)));
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -149,7 +149,7 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int tmin(void) {
-  return 1 << 31;
+  return 1<<31;
 }
 //2
 /*
@@ -197,7 +197,7 @@ int negate(int x) {
  *   Rating: 3
  */
 int isAsciiDigit(int x) {
-  return 2;
+  return (!((x + ~48 + 1) >> 31)) & ((x + ~58 + 1) >> 31);;
 }
 /* 
  * conditional - same as x ? y : z 
@@ -207,7 +207,7 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  return ((!x + (~1) + 1) & y) | ((~(!x) + 1) & z);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -217,7 +217,11 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+  int a = x >> 31;
+  int b = y >> 31;
+  int c = a + b;
+  int d = ((y + ~x + 1) >> 31) & 1; 
+  return (c & (a & 1)) | ((~c) & (!d));
 }
 //4
 /* 
@@ -229,7 +233,7 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return 2;
+  return ((~x & ~(~x + 1)) >> 31) & 1; 
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
